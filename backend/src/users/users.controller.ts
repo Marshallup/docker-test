@@ -20,7 +20,7 @@ export class UsersController {
 
     @Get('test')
     testGet() {
-        return [ { success: true, status: 200 } ];
+        return [ { success: true, status: 201 } ];
     }
 
     @ApiOperation({ summary: 'Создание пользователя' })

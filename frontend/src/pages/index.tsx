@@ -29,7 +29,7 @@ const Home: NextPage = () => {
 
       <main>
         <div>
-          <button onClick={doFetch}>Сделать запрос на бек</button>
+          <button onClick={doFetch}>Сделать запрос на бек qweqw</button>
           <h2>Ответ здесь:</h2>
           <pre>
             { JSON.stringify(data) }
