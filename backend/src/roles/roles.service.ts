@@ -1,8 +1,8 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Role, RoleDocument } from './roles.schema';
-import { CreateRoleDto } from './dto/create-role.dto';
+import { CreateRoleDto, CreateRolesDto } from './dto/create-role.dto';
 
 @Injectable()
 export class RolesService {
@@ -13,15 +13,33 @@ export class RolesService {
         return role;
     }
 
-    async getRoleByValue(value: string) {
-        const role = await this.RoleModel.findOne({ value });
+    async getRoleByName(name: string) {
+        try {
+            const role = await this.RoleModel.findOne({ name });
 
-        return role;
+            if (!role) {
+                throw new HttpException('Роли не найдено!', HttpStatus.NOT_FOUND );
+            }
+
+            return role;
+        } catch(error) {
+            throw new HttpException('Ошибка при получении роли', HttpStatus.NOT_FOUND );
+        }
     }
 
     async getRoleByID(id: string) {
         const role = await this.RoleModel.findById(id);
 
         return role;
+    }
+
+    async createRoles(dto: CreateRolesDto) {
+        try {
+            const roles = await this.RoleModel.create(dto);
+
+            return roles;
+        } catch(error) {
+            console.log(error.message);
+        }
     }
 }

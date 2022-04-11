@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.9'
 
 services:
   nginx_nestjs:
@@ -13,7 +13,6 @@ services:
     depends_on:
       - frontend_nestjs
       - backend_nestjs
-      - mongo_nestjs
   frontend_nestjs:
     build:
       context: ../frontend
@@ -22,8 +21,8 @@ services:
     tty: true
     volumes:
       - ../frontend:/frontend
-      - frontent_modules:/frontend/node_modules
-      - frontent_.next:/frontend/.next
+      - /frontend/node_modules
+      - /frontend/.next
     ports:
       - "3000:3000"
     depends_on:
@@ -36,7 +35,7 @@ services:
     tty: true
     volumes:
       - ../backend:/backend
-      - backend_modules:/backend/node_modules
+      - backend/node_modules
     ports:
       - "7000:7000"
     depends_on:
@@ -51,8 +50,3 @@ services:
     volumes:
       - ./mongodb/data:/data/dbmongo
       - ./mongodb/config:/data/configdb
-
-volumes:
-  frontent_modules:
-  frontent_.next:
-  backend_modules:

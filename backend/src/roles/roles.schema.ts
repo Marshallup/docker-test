@@ -8,7 +8,7 @@ export type RoleDocument = Role & Document;
 export class Role {
   @ApiProperty({ example: 'user', description: 'Роль пользователя' })
   @Prop({ required: true, unique: true, index: true })
-  value: string;
+  name: string;
 
   @Prop({ required: true, unique: true, index: true })
   description: string;

@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './users.schema';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateUsersDto } from './dto/create-user.dto';
 import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
@@ -14,13 +14,25 @@ export class UsersService {
         private roleService: RolesService
     ) {}
 
+    async createUsers(dto: CreateUsersDto) {
+        try {
+            const users = await this.userModel.create(dto);
+
+            return users;   
+        } catch(error) {
+            console.log(error.message);
+        }
+    }
     async createUser(dto: CreateUserDto) {
-        const user = await this.userModel.create(dto);
-        const role = await this.roleService.getRoleByValue('USER');
+        const role = await this.roleService.getRoleByName('USER');
 
-        await this.userModel.findOneAndUpdate({ email: dto.email }, { roles: [ role._id ] });
+        try {
+            const user = await this.userModel.create({ ...dto, roles: [ role._id ] });
 
-        return this.userModel.findOne({ email: dto.email });
+            return user;
+        } catch(error) {
+            throw new HttpException('Ошибка при создании пользователя', HttpStatus.BAD_REQUEST);
+        }
     }
 
     async getAllUsers() {
@@ -36,7 +48,7 @@ export class UsersService {
 
     async addRole(dto: AddRoleDto) {
         const user = await this.userModel.findById(dto.userId);
-        const role = await this.roleService.getRoleByValue(dto.value)
+        const role = await this.roleService.getRoleByName(dto.name)
     
         if (role && user) {
             await this.userModel.findOneAndUpdate({ _id: user._id }, { roles: [ role._id ] });

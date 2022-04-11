@@ -8,4 +8,7 @@ export class CreateUserDto {
     readonly email: string;
     @Length(4, 16, { message: 'Не меньше 4 и не больше 16' })
     readonly password: string;
+    readonly roles?: string[] = [];
 }
+
+export type CreateUsersDto = CreateUserDto[];
